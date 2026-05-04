@@ -6,15 +6,13 @@
 # ---------------------------------------------------------------------------
 vault_address     = "http://localhost:8200"
 vault_token       = "root"                    # dev-mode root token; use VAULT_TOKEN env var in production
-vault_secret_path = "secret/azure/sp"         # KV path where Azure SP creds are stored
+vault_kv_mount    = "secret"                  # KV v2 mount point
+vault_secret_path = "azure/sp"                # secret name within the mount (resolves to secret/data/azure/sp)
 
 # ---------------------------------------------------------------------------
-# Azure — subscription/tenant/SP are now read from Vault (see vault.tf)
-# The variables below are still declared but NOT used by the azurerm provider
-# when Vault integration is active. They are kept as fallback documentation.
+# Azure — subscription_id, tenant_id, client_id, client_secret are ALL
+# sourced from Vault at vault_secret_path. No need to set them here.
 # ---------------------------------------------------------------------------
-# azure_subscription_id = "<sourced-from-vault>"
-# azure_tenant_id       = "<sourced-from-vault>"
 
 location            = "eastus"
 environment         = "dev"

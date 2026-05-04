@@ -14,23 +14,34 @@ variable "vault_token" {
   default     = "root"   # default matches Vault dev-mode root token
 }
 
-variable "vault_secret_path" {
-  description = "KV path in Vault where Azure SP credentials are stored (e.g. secret/azure/sp)"
+variable "vault_kv_mount" {
+  description = "Vault KV v2 mount point (the secrets engine mount, e.g. 'secret')"
   type        = string
-  default     = "secret/azure/sp"
+  default     = "secret"
+}
+
+variable "vault_secret_path" {
+  description = "KV v2 secret name within the mount (e.g. 'azure/sp' for secret/data/azure/sp)"
+  type        = string
+  default     = "azure/sp"
 }
 
 # ---------------------------------------------------------------------------
 # Azure
 # ---------------------------------------------------------------------------
+# NOTE: subscription_id and tenant_id are now sourced from Vault (vault.tf).
+# These variables are kept for backwards compatibility but are no longer
+# passed to the azurerm provider — Vault is the single source of truth.
 variable "azure_subscription_id" {
-  description = "Azure Subscription ID"
+  description = "(Unused — sourced from Vault) Azure Subscription ID"
   type        = string
+  default     = ""
 }
 
 variable "azure_tenant_id" {
-  description = "Azure Tenant / Directory ID"
+  description = "(Unused — sourced from Vault) Azure Tenant / Directory ID"
   type        = string
+  default     = ""
 }
 
 variable "location" {
