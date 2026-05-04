@@ -10,20 +10,34 @@ terraform {
       source  = "infobloxopen/infoblox"
       version = "~> 2.5"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "~> 4.0"
+    }
   }
 }
 
 # ---------------------------------------------------------------------------
-# Azure Provider
+# Vault Provider  –  reads Azure SP credentials from HashiCorp Vault
+# Running locally:  docker run --cap-add=IPC_LOCK -e 'VAULT_DEV_ROOT_TOKEN_ID=root'
+#                              -p 8200:8200 hashicorp/vault:2.0
+# ---------------------------------------------------------------------------
+provider "vault" {
+  address = var.vault_address
+  token   = var.vault_token
+}
+
+# ---------------------------------------------------------------------------
+# Azure Provider  –  credentials sourced from Vault (see vault.tf)
 # ---------------------------------------------------------------------------
 provider "azurerm" {
   features {}
 
-  subscription_id = var.azure_subscription_id
-  tenant_id       = var.azure_tenant_id
+  subscription_id = data.vault_generic_secret.azure_sp.data["subscription_id"]
+  tenant_id       = data.vault_generic_secret.azure_sp.data["tenant_id"]
+  client_id       = data.vault_generic_secret.azure_sp.data["client_id"]
+  client_secret   = data.vault_generic_secret.azure_sp.data["client_secret"]
 
-  # Disable automatic resource provider registration (azurerm v3 equivalent).
-  # Microsoft.Network is pre-registered on all subscriptions by default.
   skip_provider_registration = true
 }
 

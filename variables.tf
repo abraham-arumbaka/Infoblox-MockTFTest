@@ -1,4 +1,26 @@
 # ---------------------------------------------------------------------------
+# Vault
+# ---------------------------------------------------------------------------
+variable "vault_address" {
+  description = "HashiCorp Vault server address (e.g. http://localhost:8200)"
+  type        = string
+  default     = "http://localhost:8200"
+}
+
+variable "vault_token" {
+  description = "Vault token used to authenticate. Use VAULT_TOKEN env var in CI/production."
+  type        = string
+  sensitive   = true
+  default     = "root"   # default matches Vault dev-mode root token
+}
+
+variable "vault_secret_path" {
+  description = "KV path in Vault where Azure SP credentials are stored (e.g. secret/azure/sp)"
+  type        = string
+  default     = "secret/azure/sp"
+}
+
+# ---------------------------------------------------------------------------
 # Azure
 # ---------------------------------------------------------------------------
 variable "azure_subscription_id" {

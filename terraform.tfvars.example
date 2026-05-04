@@ -1,0 +1,39 @@
+# ---------------------------------------------------------------------------
+# Vault — HashiCorp Vault running in Docker dev mode
+#   docker run --cap-add=IPC_LOCK \
+#              -e 'VAULT_DEV_ROOT_TOKEN_ID=root' \
+#              -p 8200:8200 hashicorp/vault:2.0
+# ---------------------------------------------------------------------------
+vault_address     = "http://localhost:8200"
+vault_token       = "root"                    # dev-mode root token; use VAULT_TOKEN env var in production
+vault_secret_path = "secret/azure/sp"         # KV path where Azure SP creds are stored
+
+# ---------------------------------------------------------------------------
+# Azure — subscription/tenant/SP are now read from Vault (see vault.tf)
+# The variables below are still declared but NOT used by the azurerm provider
+# when Vault integration is active. They are kept as fallback documentation.
+# ---------------------------------------------------------------------------
+# azure_subscription_id = "<sourced-from-vault>"
+# azure_tenant_id       = "<sourced-from-vault>"
+
+location            = "eastus"
+environment         = "dev"
+resource_group_name = "rg-temp-vnet"
+vnet_name           = "vnet-temp"
+
+subnet_names         = ["snet-app", "snet-data", "snet-mgmt"]
+subnet_prefix_length = 27
+
+# ---------------------------------------------------------------------------
+# Infoblox — points at the local mock server
+# ---------------------------------------------------------------------------
+infoblox_server       = "localhost"
+infoblox_port         = "8443"
+infoblox_username     = "admin"
+infoblox_password     = "infoblox"
+infoblox_wapi_version = "2.5"
+infoblox_sslmode      = false
+
+infoblox_network_container = "10.0.0.0/8"
+infoblox_network_view      = "default"
+vnet_prefix_length         = 24
